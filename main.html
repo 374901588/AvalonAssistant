@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>阿瓦隆辅助页</title>
+  </head>
+  <body>
+    <div class="main-page">
+      <div class="left-part">
+        <p>1</p>
+      </div>
+      <div class="right-part">
+        <div class="countdown-area">
+          <div>
+            <!-- 倒计时区域 -->
+            <p id="countdown" style="color:black;font-size:50px">00:00</p>
+          </div>
+          <div>
+            <button id="countdown_reset" onclick="onCountdownPauseAndReset()">重置</button>
+            <button id="countdown_opt" onclick="onCountdownOpt()">计时</button>
+            <select id="countdown_time_selector" onchange="onCountdownTimeChanged()">
+              <option value="60" selected="selected">1min</option>
+              <option value="90">1.5min</option>
+              <option value="120">2min</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <!-- 角色互看表区域 -->
+        </div>
+      </div>
+    </div>
+    <script src="scripts/main.js" defer></script>
+  </body>
+</html>
