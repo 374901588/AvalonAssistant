@@ -44,11 +44,21 @@ var curRound = 1
 var curTimesOfRound = 1
 createNextCarElements(curRound, curTimesOfRound, true, playerNum)
 
+// TODO 辅助判断当前局次是否已经完成
+var isCurRoundEnd = false
+
+
 // TODO 开启下一局/轮，文案可以设置为第 X 局第 X 轮
 function onNextCar() {
+    if (curRound >= 5) {
+        alert("无法超过 5 局，请重新开始游戏")
+        return;
+    }
+
     // TODO 先校验上一轮次的结果有没有设置
+
     curRound++
-    createNextCarElements(curRound, curTimesOfRound, true, playerNum)
+    createNextCarElements(curRound, curTimesOfRound, isCurRoundEnd, playerNum)
 }
 
 /**
@@ -60,7 +70,16 @@ function onNextCar() {
  */
 function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     var tr = document.createElement("tr")
-    tr.appendChild(getThForRound(round))
+
+    if(isNewRound) {
+        tr.appendChild(getThForRound(round, isNewRound))
+    } else {
+        // TODO 当局占多行的逻辑还有问题
+        var thRound = document.getElementById("round_"+round)
+        if(thRound!=null) {
+            thRound.ariaRowSpan = timesOfRound
+        }
+    }
     tr.appendChild(getThForTimesOfRound(timesOfRound))
     
     // 针对玩家设置当前轮次交互元素格
@@ -74,9 +93,10 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     recordTableBody.appendChild(tr)
 }
 
-function getThForRound(round) {
+function getThForRound(round, isNewRound) {
     var th = document.createElement("th")
     th.className = "record_table_theadth"
+    th.id = "round_"+round
     th.innerHTML = roundTxtMap[round]
     return th
 }
