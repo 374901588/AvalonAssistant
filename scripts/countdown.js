@@ -1,5 +1,4 @@
-// TODO 按钮实现防抖
-
+// 关于时间倒计时的逻辑实现
 var countdownTimeUnit = 60
 var countdownTimeTxt = document.getElementById("countdown_time")
 var countdownOptBtn = document.getElementById("countdown_opt")

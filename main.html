@@ -8,13 +8,25 @@
   <body>
     <div class="main-page">
       <div class="left-part">
-        <p>1</p>
+        <!-- 标记示例区 -->
+        <div id="icon_sample_area"></div>
+        <!-- 游戏记录区 -->
+        <div id="record_area">
+          <table id="record_table">
+            <thead id="record_table_thead">
+              <!-- 根据玩家人数，动态生成 -->
+          </thead>
+          <tbody id="record_table_tbody">
+              <!-- 根据游戏轮次，动态生成 -->
+          </tbody>
+          </table>
+        </div>
       </div>
       <div class="right-part">
-        <div class="countdown-area">        
+        <div id="countdown_area">        
           <!-- 倒计时区域 -->
           <p id="countdown_time">00:00</p>
-          <div class="countdown_opt_area">
+          <div id="countdown_opt_area">
             <button id="countdown_reset" onclick="onCountdownPauseAndReset()">重置</button>
             <button id="countdown_opt" onclick="onCountdownOpt()">计时</button>
             <select id="countdown_time_selector" onchange="onCountdownTimeChanged()">
@@ -29,6 +41,7 @@
         </div>
       </div>
     </div>
-    <script src="scripts/main.js" defer></script>
+    <script src="scripts/countdown.js" defer></script>
+    <script src="scripts/record.js" defer></script>
   </body>
 </html>
