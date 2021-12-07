@@ -21,10 +21,23 @@
     margin: 100px auto;
     background: #ff9999;
     width: 200px;
-    height: 200px;
+    height: 150px;
 }
 
-.countdown {
-    color: red;
-    font-size: 30px;
+#countdown_time {
+    background: blanchedalmond;
+    margin: auto;
+    font-size: 50px;
+    color: black;
+    height: 100px;
+    line-height: 100px;
+    text-align:center;
+}
+
+.countdown_opt_area {
+    background: cadetblue;
+    text-align: center;
+    margin: auto;
+    height: 50px;
+    line-height: 50px;
 }

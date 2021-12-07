@@ -1,7 +1,7 @@
 // TODO 按钮实现防抖
 
 var countdownTimeUnit = 60
-var countdownTimeTxt = document.getElementById("countdown")
+var countdownTimeTxt = document.getElementById("countdown_time")
 var countdownOptBtn = document.getElementById("countdown_opt")
 
 var count = 0;
@@ -31,12 +31,14 @@ function onCountdownTimeChanged() {
   onCountdownPauseAndReset()
 }
 
-// TODO 重置倒计时并暂停
+// 重置倒计时并暂停
 function onCountdownPauseAndReset() {
   clearInterval(timer)
   timer = null
   count = countdownTimeUnit
   updateCountdownTimeTxt(count)
+  isOptForStart = true
+  countdownOptBtn.innerHTML = "开始"
 }
 
 function onCountdownOpt() {
@@ -50,14 +52,14 @@ function onCountdownOpt() {
   isOptForStart = !isOptForStart
 }
 
-// TODO 暂停倒计时
+// 暂停倒计时
 function onCountdownPause() {
   if(timer!=null) {
     clearInterval(timer)
   }
 }
 
-// TODO 恢复倒计时
+// 恢复倒计时
 function onCountdownStart() {
   tiggerTimer()
 }
@@ -65,9 +67,7 @@ function onCountdownStart() {
 function formatTime(time) {
   var min = Math.floor(time / 60);
   var sec = time % 60;
-  console.log("min: "+min);
-  console.log("sec: "+sec);
-  return formatTimeTo2Num(min) + " : " + formatTimeTo2Num(sec);
+  return formatTimeTo2Num(min) + ":" + formatTimeTo2Num(sec);
 }
 
 function formatTimeTo2Num(time) {

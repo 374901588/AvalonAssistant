@@ -11,12 +11,10 @@
         <p>1</p>
       </div>
       <div class="right-part">
-        <div class="countdown-area">
-          <div>
-            <!-- 倒计时区域 -->
-            <p id="countdown" style="color:black;font-size:50px">00:00</p>
-          </div>
-          <div>
+        <div class="countdown-area">        
+          <!-- 倒计时区域 -->
+          <p id="countdown_time">00:00</p>
+          <div class="countdown_opt_area">
             <button id="countdown_reset" onclick="onCountdownPauseAndReset()">重置</button>
             <button id="countdown_opt" onclick="onCountdownOpt()">计时</button>
             <select id="countdown_time_selector" onchange="onCountdownTimeChanged()">
