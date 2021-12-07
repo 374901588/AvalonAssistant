@@ -1,0 +1,71 @@
+@font-face {
+    font-family:'digital-clock-font';
+    src: url("/fonts/LCD-BQ.TTF");
+}
+
+.main-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    margin: 0;
+}
+
+.left-part {
+    display: list-item;
+    background: #bdd7f1;
+    width: 70%;
+}
+
+.right-part {
+    background: #fdc1c1;
+    width: 30%;
+}
+
+/* 倒计时区域 */
+#countdown_area {
+    margin: 100px auto;
+    background: #ff9999;
+    width: 200px;
+    height: 150px;
+}
+
+#countdown_time {
+    background: blanchedalmond;
+    margin: auto;
+    font-size: 50px;
+    font-family: "digital-clock-font";
+    color: black;
+    height: 100px;
+    line-height: 100px;
+    text-align:center;
+}
+
+#countdown_opt_area {
+    background: cadetblue;
+    text-align: center;
+    margin: auto;
+    height: 50px;
+    line-height: 50px;
+}
+
+#icon_sample_area {
+    background: coral;
+    width: 500px;
+    height: 150px;
+    margin: 100px auto;
+}
+
+#record_area {
+    background: rgb(238, 252, 201);
+    width: 600px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.th {
+    width: 80px;
+    height: 50px;
+    border: 2px solid #333;
+    text-align: center;
+}

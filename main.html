@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/right_part.css">
+    <link rel="stylesheet" href="styles/left_part.css">
     <title>阿瓦隆辅助页</title>
   </head>
   <body>
@@ -15,11 +17,17 @@
           <table id="record_table">
             <thead id="record_table_thead">
               <!-- 根据玩家人数，动态生成 -->
-          </thead>
-          <tbody id="record_table_tbody">
+              <tr id="record_table_theadtr">
+                <th class="record_table_theadth">局次</th>
+                <th class="record_table_theadth">轮次</th>
+              </tr>
+            </thead>
+            <tbody id="record_table_tbody">
               <!-- 根据游戏轮次，动态生成 -->
-          </tbody>
+            </tbody>
           </table>
+          <!--  -->
+          <button id="next_car_btn" onclick="onNextCar()">开启下一局/轮</button>
         </div>
       </div>
       <div class="right-part">

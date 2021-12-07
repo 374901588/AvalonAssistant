@@ -1,0 +1,33 @@
+#icon_sample_area {
+    background: coral;
+    width: 500px;
+    height: 150px;
+    margin: 100px auto;
+}
+
+#record_area {
+    background: rgb(238, 252, 201);
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+}
+
+#record_table {
+    border-collapse: collapse;
+    border: 1px solid rgb(200,200,200);
+    letter-spacing: 1px;
+}
+
+.record_table_theadth {
+    border: 1px solid rgb(190,190,190);
+    width: 70px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
+#next_car_btn {
+    margin: 20px auto;
+    width: 80%;
+    height: 40px;
+}

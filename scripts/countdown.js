@@ -1,7 +1,7 @@
 // 关于时间倒计时的逻辑实现
 var countdownTimeUnit = 60
-var countdownTimeTxt = document.getElementById("countdown_time")
-var countdownOptBtn = document.getElementById("countdown_opt")
+const countdownTimeTxt = document.getElementById("countdown_time")
+const countdownOptBtn = document.getElementById("countdown_opt")
 
 var count = 0;
 onCountdownPauseAndReset()
