@@ -31,3 +31,7 @@
     width: 80%;
     height: 40px;
 }
+
+#result_float_menu.active {
+    visibility: visible;
+}

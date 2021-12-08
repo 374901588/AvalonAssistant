@@ -141,15 +141,32 @@ function getResultCell(round, times) {
     td.innerHTML = "空白"
     console.log(td.id)
     // 实现鼠标悬停
-    td.onclick = function() {
-        // TODO 如果是第 5 轮次，限制只有成功/失败两个选项
-        // TODO 如果好人已经赢到第三局，提示游戏结束，忽略后续逻辑
-        td.innerHTML = "失败"
-        // 如果已经创建了下一轮，则忽略        
-        if(round < curRound || times < curTimesOfRound) {
-            return
-        }
-        onNextCar(true)
+    td.onclick = function() { ev =>
+        onResultCellClick(round, times, ev)
     }
     return td
+}
+
+var isFloatMenuShowing = false
+
+// TODO 如果是第 5 轮次，限制只有成功/失败两个选项
+// TODO 如果好人已经赢到第三局，提示游戏结束，忽略后续逻辑
+// 锁定事件，同时只能打开一个悬浮菜单
+function onResultCellClick(round, times, ev) {
+    if(isFloatMenuShowing) {
+        return
+    }
+
+    isFloatMenuShowing = true
+    var floatMenu = document.getElementById("result_float_menu")
+    floatMenu.classList.add("active")
+
+    floatMenu.style.top = ev.target.offsetTop + ev.target.offsetHeight - 25 + "px"; // 纵向坐标
+    floatMenu.style.left = ev.target.offsetLeft + ev.target.offsetWidth / 2 - (menu.offsetWidth / 2) + "px"; // 横向坐标
+
+    // 如果已经创建了下一轮，则忽略        
+    if(round < curRound || times < curTimesOfRound) {
+        return
+    }
+    onNextCar(true)
 }
