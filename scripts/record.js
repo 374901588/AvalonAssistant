@@ -2,6 +2,8 @@
 
 const recordTableBody = document.getElementById("record_table_tbody")
 
+
+
 var roundTxtMap = {
     1: "Ⅰ",
     2: "Ⅱ",
@@ -49,15 +51,22 @@ var isCurRoundEnd = false
 
 
 // TODO 开启下一局/轮，文案可以设置为第 X 局第 X 轮
-function onNextCar() {
-    if (curRound >= 5) {
+function onNextCar(isLastLost) {
+    if(isLastLost) {
+        curTimesOfRound++
+    } else {
+        curRound++
+    }
+
+    if (curRound > 5) {
         alert("无法超过 5 局，请重新开始游戏")
         return;
+    } else if (curTimesOfRound > 5) {
+        alert("第 5 轮强制发车，无法再流局")
+        return
     }
 
     // TODO 先校验上一轮次的结果有没有设置
-
-    curRound++
     createNextCarElements(curRound, curTimesOfRound, isCurRoundEnd, playerNum)
 }
 
@@ -76,8 +85,10 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     } else {
         // TODO 当局占多行的逻辑还有问题
         var thRound = document.getElementById("round_"+round)
-        if(thRound!=null) {
-            thRound.ariaRowSpan = timesOfRound
+        console.log("thRound: "+"round_"+round)
+        if(thRound!=null) {    
+            // 要注意 rowSpan 赋值为字符串类型   
+            thRound.rowSpan = "${timesOfRound}"
         }
     }
     tr.appendChild(getThForTimesOfRound(timesOfRound))
@@ -88,7 +99,7 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     }
 
     tr.appendChild(getCarRecordCell())
-    tr.appendChild(getResultCell())
+    tr.appendChild(getResultCell(round, timesOfRound))
 
     recordTableBody.appendChild(tr)
 }
@@ -111,22 +122,34 @@ function getThForTimesOfRound(times) {
 // TODO 应该需要动态设置 id，方便做鼠标悬浮等交互
 // 获取当前轮次玩家的格子元素
 function getPlayerCell() {
-    var th = document.createElement("th")
-    th.className = "record_table_theadth"
-    th.innerHTML = "X"
-    return th
+    var td = document.createElement("td")
+    td.className = "record_table_theadth"
+    td.innerHTML = "X"
+    return td
 }
 
 function getCarRecordCell() {
-    var th = document.createElement("th")
-    th.className = "record_table_theadth"
-    th.innerHTML = "XXX"
-    return th
+    var td = document.createElement("td")
+    td.className = "record_table_theadth"
+    td.innerHTML = "XXX"
+    return td
 }
 
-function getResultCell() {
-    var th = document.createElement("th")
-    th.className = "record_table_theadth"
-    th.innerHTML = "XXX"
-    return th
+function getResultCell(round, times) {
+    var td = document.createElement("td")
+    td.className = "record_table_theadth"
+    td.innerHTML = "空白"
+    console.log(td.id)
+    // 实现鼠标悬停
+    td.onclick = function() {
+        // TODO 如果是第 5 轮次，限制只有成功/失败两个选项
+        // TODO 如果好人已经赢到第三局，提示游戏结束，忽略后续逻辑
+        td.innerHTML = "失败"
+        // 如果已经创建了下一轮，则忽略        
+        if(round < curRound || times < curTimesOfRound) {
+            return
+        }
+        onNextCar(true)
+    }
+    return td
 }
