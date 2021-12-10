@@ -1,0 +1,68 @@
+.splash_box {
+    text-align: center;
+    background-color: #fff;
+    border-radius: 20px;
+    width: 300px;
+    height: 350px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+img {
+    vertical-align: middle;
+}
+
+.player_num_box {
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.player_num_box li {
+    float: left;
+}
+
+.player_num_box li .player_number,
+.player_num_box .player_count {
+    overflow: hidden;
+    margin: 0 16px 0 -20px;
+}
+
+.player_num_box .player_count .num_operate_btn,
+.num_input,
+.num_operate_btn {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+    cursor: pointer;
+    border: 1px solid #e6e6e6;
+}
+
+.player_num_box .player_count .num_input {
+    width: 58px;
+    height: 26px;
+    color: #333;
+}

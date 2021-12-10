@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles/splash.css">
+</head>
+
+<body>
+    <div class="splash_box">
+        <p id="splash_title">请选择玩家人数</p>
+        <p>
+            <ul class="player_num_box">
+                <li><span class="player_number">玩家人数</span></li>
+                <li>
+                    <ul class="player_count">
+                        <li><span id="btn_minus" class="num_operate_btn" onclick="minusPlayer()">-</span></li>
+                        <li><b type="text" class="num_input" id="txt_num"></b></li>
+                        <li><span id="btn_plus" class="num_operate_btn" onclick="plusPlayer()">+</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </p>
+        <input type="checkbox" id="cb_has_lake_fairy">
+        <label for="cb_has_lake_fairy">是否启用湖中仙女</label>
+        <p>
+            <button onclick="startGame()">开启游戏</button>
+        </p>
+    </div>
+
+    <script src="scripts/splash.js" defer></script>
+</body>
+
+</html>

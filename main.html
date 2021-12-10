@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/right_part.css">
     <link rel="stylesheet" href="styles/left_part.css">
     <title>阿瓦隆辅助页</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="main-page">
-      <div class="left-part">
-        <!-- 标记示例区 -->
-        <div id="icon_sample_area"></div>
-        <!-- 游戏记录区 -->
-        <div id="record_area">
-          <table id="record_table">
-            <thead id="record_table_thead">
-              <!-- 根据玩家人数，动态生成 -->
-              <tr id="record_table_theadtr">
-                <th class="record_table_theadth">局次</th>
-                <th class="record_table_theadth">轮次</th>
-              </tr>
-            </thead>
-            <tbody id="record_table_tbody">
-              <!-- 根据游戏轮次，动态生成 -->
-            </tbody>
-          </table>
+        <div class="left-part">
+            <!-- 标记示例区 -->
+            <div id="icon_sample_area"></div>
+            <!-- 游戏记录区 -->
+            <div id="record_area">
+                <table id="record_table">
+                    <thead id="record_table_thead">
+                        <!-- 根据玩家人数，动态生成 -->
+                        <tr id="record_table_theadtr">
+                            <th class="record_table_theadth">局次</th>
+                            <th class="record_table_theadth">轮次</th>
+                        </tr>
+                    </thead>
+                    <tbody id="record_table_tbody">
+                        <!-- 根据游戏轮次，动态生成 -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-      <div class="right-part">
-        <div id="countdown_area">        
-          <!-- 倒计时区域 -->
-          <p id="countdown_time">00:00</p>
-          <div id="countdown_opt_area">
-            <button id="countdown_reset" onclick="onCountdownPauseAndReset()">重置</button>
-            <button id="countdown_opt" onclick="onCountdownOpt()">计时</button>
-            <select id="countdown_time_selector" onchange="onCountdownTimeChanged()">
+        <div class="right-part">
+            <div id="countdown_area">
+                <!-- 倒计时区域 -->
+                <p id="countdown_time">00:00</p>
+                <div id="countdown_opt_area">
+                    <button id="countdown_reset" onclick="onCountdownPauseAndReset()">重置</button>
+                    <button id="countdown_opt" onclick="onCountdownOpt()">计时</button>
+                    <select id="countdown_time_selector" onchange="onCountdownTimeChanged()">
               <option value="60" selected="selected">1min</option>
               <option value="90">1.5min</option>
               <option value="120">2min</option>
             </select>
-          </div>
+                </div>
+            </div>
+            <div>
+                <!-- 角色互看表区域 -->
+                <!-- 游戏人数角色表 -->
+            </div>
         </div>
-        <div>
-          <!-- 角色互看表区域 -->
-          <!-- 游戏人数角色表 -->
-        </div>
-      </div>
     </div>
 
     <!-- <div id="result_float_menu">
@@ -55,18 +57,34 @@
       <a>失败</a>
     </div> -->
 
+    <!-- 结果选择浮窗 -->
     <div id="result_float_menu">
-      <!-- 背景黑色遮罩 -->
-      <div id="result_float_menu_hidden"></div>
-      <div id="result_float_menu_box">
-          <strong>请选择本轮结果</strong>
-          <button id="result_success_btn" class="result_btns">成功</button>
-          <button id="result_failed1_btn" class="result_btns">坏票 +1</button>
-          <button id="result_failed2_btn" class="result_btns">坏票 +2</button>
-          <button id="result_lost_btn" class="result_btns">流局</button>
-      </div>
+        <!-- 背景黑色遮罩 -->
+        <div id="result_float_menu_hidden"></div>
+        <div id="result_float_menu_box">
+            <strong>请选择本轮结果</strong>
+            <button id="result_success_btn" class="result_btns">成功</button>
+            <button id="result_failed1_btn" class="result_btns">坏票 x1</button>
+            <button id="result_failed2_btn" class="result_btns">坏票 x2</button>
+            <button id="result_lost_btn" class="result_btns">流局</button>
+        </div>
     </div>
+
+    <!-- 首任车队长浮窗 -->
+    <div id="first_captain_float_menu">
+        <!-- 背景黑色遮罩 -->
+        <div id="first_captain_float_menu_hidden"></div>
+        <div id="first_captain_float_menu_box">
+            <p>
+                <strong style="color: black;">请选择首轮车队长</strong>
+                <select id="first_captain_select"></select>
+            </p>
+            <button id="first_captain_confirm">确认</button>
+        </div>
+    </div>
+
     <script src="scripts/countdown.js" defer></script>
     <script src="scripts/record.js" defer></script>
-  </body>
+</body>
+
 </html>
