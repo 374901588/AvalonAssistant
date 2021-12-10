@@ -32,6 +32,43 @@
     height: 40px;
 }
 
-#result_float_menu.active {
-    visibility: visible;
+/* 轮次结果选择弹窗 */
+#result_float_menu {
+    display: flex;
+    justify-content: center;
+}
+
+#result_float_menu_hidden {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000000;
+    opacity: 0.3;
+    display: none;
+}
+
+#result_float_menu_box {
+    color: #fff;
+    width: 400px;
+    height: 200px;
+    background-color: #40527e;
+    display: none;
+    flex-direction: column;
+    border-radius: 10px;
+    align-items: center;
+    padding-top: 20px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 200px;
+    cursor: move;
+}
+
+.result_btns {
+    margin: 5px;
+    border-radius: 10px;
+    width: 150px;
+    height: 40px;
+    background-color: #02a0a0;
 }

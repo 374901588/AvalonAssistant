@@ -1,8 +1,18 @@
 // 游戏记录相关逻辑
 
 const recordTableBody = document.getElementById("record_table_tbody")
+const resultFloatMenuBox = document.getElementById("result_float_menu_box")
+const resultFloatMenuHidden = document.getElementById("result_float_menu_hidden")
 
+const btnResultSuccess = document.getElementById("result_success_btn")
+const btnResultFailed = document.getElementById("result_failed_btn")
+const btnResultLost = document.getElementById("result_lost_btn")
 
+const RESULT_SUCCESS = "成功"
+const RESULT_FAILED = "失败"
+const RESULT_LOST = "流局"
+
+var successCount = 0
 
 var roundTxtMap = {
     1: "Ⅰ",
@@ -14,8 +24,6 @@ var roundTxtMap = {
 
 // TODO
 //  1. 设置初始队长，以及自动设置首任湖仙的逻辑
-//  2. 根据上一次的结果，动态设置 next_car_btn 按钮的文案
-//  3. 默认生成第一轮第一局
 //  4. 开始新游戏的按钮
 
 var playerNum = 6
@@ -46,28 +54,18 @@ var curRound = 1
 var curTimesOfRound = 1
 createNextCarElements(curRound, curTimesOfRound, true, playerNum)
 
-// TODO 辅助判断当前局次是否已经完成
-var isCurRoundEnd = false
-
-
 // TODO 开启下一局/轮，文案可以设置为第 X 局第 X 轮
 function onNextCar(isLastLost) {
     if(isLastLost) {
         curTimesOfRound++
     } else {
+        // 重置
+        curTimesOfRound = 1
         curRound++
     }
 
-    if (curRound > 5) {
-        alert("无法超过 5 局，请重新开始游戏")
-        return;
-    } else if (curTimesOfRound > 5) {
-        alert("第 5 轮强制发车，无法再流局")
-        return
-    }
-
     // TODO 先校验上一轮次的结果有没有设置
-    createNextCarElements(curRound, curTimesOfRound, isCurRoundEnd, playerNum)
+    createNextCarElements(curRound, curTimesOfRound, !isLastLost, playerNum)
 }
 
 /**
@@ -80,18 +78,21 @@ function onNextCar(isLastLost) {
 function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     var tr = document.createElement("tr")
 
+    console.log("round: "+round)
+    console.log("timesOfRound: "+timesOfRound)
+    console.log("isNewRound: "+isNewRound)
+
     if(isNewRound) {
-        tr.appendChild(getThForRound(round, isNewRound))
+        tr.appendChild(getRoundTd(round, isNewRound))
     } else {
-        // TODO 当局占多行的逻辑还有问题
         var thRound = document.getElementById("round_"+round)
         console.log("thRound: "+"round_"+round)
-        if(thRound!=null) {    
+        if(thRound != null) {    
             // 要注意 rowSpan 赋值为字符串类型   
-            thRound.rowSpan = "${timesOfRound}"
+            thRound.rowSpan = timesOfRound
         }
     }
-    tr.appendChild(getThForTimesOfRound(timesOfRound))
+    tr.appendChild(getTimesOfRoundTd(timesOfRound))
     
     // 针对玩家设置当前轮次交互元素格
     for(var i = 1; i <= playerNum; i++) {
@@ -104,19 +105,20 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     recordTableBody.appendChild(tr)
 }
 
-function getThForRound(round, isNewRound) {
-    var th = document.createElement("th")
-    th.className = "record_table_theadth"
-    th.id = "round_"+round
-    th.innerHTML = roundTxtMap[round]
-    return th
+function getRoundTd(round, isNewRound) {
+    var td = document.createElement("td")
+    td.className = "record_table_theadth"
+    td.id = "round_"+round
+    td.innerHTML = roundTxtMap[round]
+    return td
 }
 
-function getThForTimesOfRound(times) {
-    var th = document.createElement("th")
-    th.className = "record_table_theadth"
-    th.innerHTML = times
-    return th
+function getTimesOfRoundTd(times) {
+    var td = document.createElement("td")
+    td.colSpan = 1
+    td.className = "record_table_theadth"
+    td.innerHTML = times
+    return td
 }
 
 // TODO 应该需要动态设置 id，方便做鼠标悬浮等交互
@@ -141,32 +143,62 @@ function getResultCell(round, times) {
     td.innerHTML = "空白"
     console.log(td.id)
     // 实现鼠标悬停
-    td.onclick = function() { ev =>
-        onResultCellClick(round, times, ev)
+    td.onclick = function() { 
+        onResultCellClick(td, round, times)
+        td.onclick = null
     }
     return td
 }
 
-var isFloatMenuShowing = false
-
 // TODO 如果是第 5 轮次，限制只有成功/失败两个选项
 // TODO 如果好人已经赢到第三局，提示游戏结束，忽略后续逻辑
 // 锁定事件，同时只能打开一个悬浮菜单
-function onResultCellClick(round, times, ev) {
-    if(isFloatMenuShowing) {
-        return
-    }
+function onResultCellClick(td, round, times) {
+    resultFloatMenuBox.style.display = 'flex';
+    resultFloatMenuHidden.style.display = 'block';
 
-    isFloatMenuShowing = true
-    var floatMenu = document.getElementById("result_float_menu")
-    floatMenu.classList.add("active")
-
-    floatMenu.style.top = ev.target.offsetTop + ev.target.offsetHeight - 25 + "px"; // 纵向坐标
-    floatMenu.style.left = ev.target.offsetLeft + ev.target.offsetWidth / 2 - (menu.offsetWidth / 2) + "px"; // 横向坐标
-
-    // 如果已经创建了下一轮，则忽略        
-    if(round < curRound || times < curTimesOfRound) {
-        return
-    }
-    onNextCar(true)
+    btnResultSuccess.onclick = function() {
+        onResultOptBtnClick(RESULT_SUCCESS, td, round, times, false)
+    };
+    btnResultFailed.onclick = function() {
+        onResultOptBtnClick(RESULT_FAILED, td, round, times, false)
+    };
+    btnResultLost.onclick = function() {
+        onResultOptBtnClick(RESULT_LOST, td, round, times, true)
+    };
 }
+
+function hideResultFloatMenu() {
+    resultFloatMenuHidden.style.display = 'none';
+
+    resultFloatMenuBox.style.display = 'none';
+    // 关闭后恢复box到原来的默认位置
+    resultFloatMenuBox.style.top = '200px';
+    resultFloatMenuBox.style.left = '';
+}
+
+// TODO 判断成功/失败的次数，判断游戏是否可以结束了
+function onResultOptBtnClick(resultStr, td, round, times, isLost) {
+    if (curTimesOfRound >= 5 && resultStr == RESULT_LOST) {
+        alert("第 5 轮强制发车，无法再流局")
+        return
+    }
+
+    td.innerHTML = resultStr
+    hideResultFloatMenu()
+
+    if(resultStr == RESULT_SUCCESS) {
+        successCount++
+        // TODO 事件是阻塞的，需要等到弹窗消失才会往下走
+        if(successCount >= 3) {
+            alert("好人阵营已经达成胜利，请坏人阵营拍刀")
+            return
+        }
+    }
+
+    if (curRound >= 5 || round < curRound || times < curTimesOfRound) {
+        return;
+    }
+
+    onNextCar(isLost)
+}    
