@@ -72,3 +72,15 @@
     height: 40px;
     background-color: #02a0a0;
 }
+
+.player_support_icon_icon {
+    width: 25px;
+    height: 25px;
+    margin: auto;
+}
+
+.player_task_member_icon {
+    width: 15px;
+    height: 15px;
+    margin: auto;
+}

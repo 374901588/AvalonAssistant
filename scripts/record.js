@@ -5,11 +5,13 @@ const resultFloatMenuBox = document.getElementById("result_float_menu_box")
 const resultFloatMenuHidden = document.getElementById("result_float_menu_hidden")
 
 const btnResultSuccess = document.getElementById("result_success_btn")
-const btnResultFailed = document.getElementById("result_failed_btn")
+const btnResultFailed1 = document.getElementById("result_failed1_btn")
+const btnResultFailed2 = document.getElementById("result_failed2_btn")
 const btnResultLost = document.getElementById("result_lost_btn")
 
 const RESULT_SUCCESS = "成功"
-const RESULT_FAILED = "失败"
+const RESULT_FAILED_1 = "坏票 x1"
+const RESULT_FAILED_2 = "坏票 x2"
 const RESULT_LOST = "流局"
 
 var successCount = 0
@@ -23,28 +25,32 @@ var roundTxtMap = {
 };
 
 // TODO
-//  1. 设置初始队长，以及自动设置首任湖仙的逻辑
-//  4. 开始新游戏的按钮
+//  1. 设置初始队长（需要强制指定），以及自动设置首任湖仙的逻辑
+//  2. 开始新游戏的按钮
+//  3. 校验上车人数
 
 var playerNum = 6
 // TODO 是否有湖中仙女
 var hasLakeFairy = false
 
 // 先生成局次、轮次列，然后根据游戏人数动态生成玩家列，以及最后的记录、结果列
-var recordTableHeadTr = document.getElementById("record_table_theadtr")
-for(var i=1; i<= playerNum; i++) {
-    var th = document.createElement("th")
-    th.innerHTML = "玩家 "+i
+let recordTableHeadTr = document.getElementById("record_table_theadtr")
+for(let i=1; i<= playerNum; i++) {
+    let th = document.createElement("th")
+    th.innerHTML = "玩家 "+ i
     th.className = "record_table_theadth"
+    th.ondblclick = function() {
+        onSetTaskMember(curRound, curTimesOfRound, i)
+    }
     recordTableHeadTr.appendChild(th)
 }
 
-var thDriver = document.createElement("th")
+let thDriver = document.createElement("th")
 thDriver.innerHTML = "记录"
 thDriver.className = "record_table_theadth"
 recordTableHeadTr.appendChild(thDriver)
 
-var thResult = document.createElement("th")
+let thResult = document.createElement("th")
 thResult.innerHTML = "结果"
 thResult.className = "record_table_theadth"
 recordTableHeadTr.appendChild(thResult)
@@ -76,7 +82,7 @@ function onNextCar(isLastLost) {
  * @param {number} playerNum 玩家人数
  */
 function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
-    var tr = document.createElement("tr")
+    let tr = document.createElement("tr")
 
     console.log("round: "+round)
     console.log("timesOfRound: "+timesOfRound)
@@ -85,18 +91,17 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
     if(isNewRound) {
         tr.appendChild(getRoundTd(round, isNewRound))
     } else {
-        var thRound = document.getElementById("round_"+round)
-        console.log("thRound: "+"round_"+round)
-        if(thRound != null) {    
-            // 要注意 rowSpan 赋值为字符串类型   
+        let thRound = document.getElementById("round_"+round)
+        if(thRound != null) {      
             thRound.rowSpan = timesOfRound
         }
     }
-    tr.appendChild(getTimesOfRoundTd(timesOfRound))
+    // TODO 设置双击一键还原都没有投票
+    tr.appendChild(getTimesOfRoundTd(round, timesOfRound, playerNum))
     
     // 针对玩家设置当前轮次交互元素格
-    for(var i = 1; i <= playerNum; i++) {
-        tr.appendChild(getPlayerCell())
+    for(let i = 1; i <= playerNum; i++) {
+        tr.appendChild(getPlayerCell(round, timesOfRound, i))
     }
 
     tr.appendChild(getCarRecordCell())
@@ -106,43 +111,90 @@ function createNextCarElements(round, timesOfRound, isNewRound, playerNum) {
 }
 
 function getRoundTd(round, isNewRound) {
-    var td = document.createElement("td")
+    let td = document.createElement("td")
     td.className = "record_table_theadth"
     td.id = "round_"+round
     td.innerHTML = roundTxtMap[round]
     return td
 }
 
-function getTimesOfRoundTd(times) {
-    var td = document.createElement("td")
+function getTimesOfRoundTd(round, times, playerNum) {
+    let td = document.createElement("td")
     td.colSpan = 1
     td.className = "record_table_theadth"
     td.innerHTML = times
+    td.ondblclick = function() {        
+        setAllPlayerCell(true, round, times, playerNum)
+    }
+    td.onclick = function() {
+        setAllPlayerCell(false, round, times, playerNum)
+    }
     return td
+}
+
+function setAllPlayerCell(isSupport, round, times, playerNum) {
+    var visibility = isSupport ? "visible" : "hidden"
+    for(let i=1; i<=playerNum; i++) {
+        let id = getPlayerCellSupportIconId(round, times, i)
+        let cellIcon = document.getElementById(id)
+        console.log("id: "+id)
+        console.log("cellIcon: "+cellIcon)
+        cellIcon.style.visibility = visibility
+    }
 }
 
 // TODO 应该需要动态设置 id，方便做鼠标悬浮等交互
 // 获取当前轮次玩家的格子元素
-function getPlayerCell() {
-    var td = document.createElement("td")
+function getPlayerCell(round, timesOfRound, index) {
+    let td = document.createElement("td")
     td.className = "record_table_theadth"
-    td.innerHTML = "X"
+
+    let supportIcon = document.createElement("img")
+    supportIcon.id = getPlayerCellSupportIconId(round, timesOfRound, index)
+    supportIcon.className = "player_support_icon_icon"
+    supportIcon.src = "images/icon_support_task.svg"
+    supportIcon.style.visibility = "hidden"
+
+    td.onclick = function() {
+        console.log("img.style.visibility: " + supportIcon.style.visibility)
+        if(supportIcon.style.visibility == "visible") {
+            supportIcon.style.visibility = "hidden"
+        } else {
+            supportIcon.style.visibility = "visible"   
+        }
+    }
+
+    let taskMemberIcon = document.createElement("img")
+    taskMemberIcon.id = getPlayerCellTaskMemberIconId(round, timesOfRound, index)
+    taskMemberIcon.className = "player_task_member_icon"
+    taskMemberIcon.src = "images/icon_task_member.svg"
+    taskMemberIcon.style.visibility = "hidden"
+
+    td.appendChild(supportIcon)
+    td.appendChild(taskMemberIcon)
+
     return td
 }
 
+function getPlayerCellSupportIconId(round, timesOfRound, index) {
+    return `support_${round}_${timesOfRound}_${index}`
+}
+
+function getPlayerCellTaskMemberIconId(round, timesOfRound, index) {
+    return `member_${round}_${timesOfRound}_${index}`
+}
+
 function getCarRecordCell() {
-    var td = document.createElement("td")
+    let td = document.createElement("td")
     td.className = "record_table_theadth"
     td.innerHTML = "XXX"
     return td
 }
 
 function getResultCell(round, times) {
-    var td = document.createElement("td")
+    let td = document.createElement("td")
     td.className = "record_table_theadth"
-    td.innerHTML = "空白"
     console.log(td.id)
-    // 实现鼠标悬停
     td.onclick = function() { 
         onResultCellClick(td, round, times)
         td.onclick = null
@@ -150,9 +202,7 @@ function getResultCell(round, times) {
     return td
 }
 
-// TODO 如果是第 5 轮次，限制只有成功/失败两个选项
 // TODO 如果好人已经赢到第三局，提示游戏结束，忽略后续逻辑
-// 锁定事件，同时只能打开一个悬浮菜单
 function onResultCellClick(td, round, times) {
     resultFloatMenuBox.style.display = 'flex';
     resultFloatMenuHidden.style.display = 'block';
@@ -160,8 +210,11 @@ function onResultCellClick(td, round, times) {
     btnResultSuccess.onclick = function() {
         onResultOptBtnClick(RESULT_SUCCESS, td, round, times, false)
     };
-    btnResultFailed.onclick = function() {
-        onResultOptBtnClick(RESULT_FAILED, td, round, times, false)
+    btnResultFailed1.onclick = function() {
+        onResultOptBtnClick(RESULT_FAILED_1, td, round, times, false)
+    };
+    btnResultFailed2.onclick = function() {
+        onResultOptBtnClick(RESULT_FAILED_2, td, round, times, false)
     };
     btnResultLost.onclick = function() {
         onResultOptBtnClick(RESULT_LOST, td, round, times, true)
@@ -177,7 +230,6 @@ function hideResultFloatMenu() {
     resultFloatMenuBox.style.left = '';
 }
 
-// TODO 判断成功/失败的次数，判断游戏是否可以结束了
 function onResultOptBtnClick(resultStr, td, round, times, isLost) {
     if (curTimesOfRound >= 5 && resultStr == RESULT_LOST) {
         alert("第 5 轮强制发车，无法再流局")
@@ -202,3 +254,15 @@ function onResultOptBtnClick(resultStr, td, round, times, isLost) {
 
     onNextCar(isLost)
 }    
+
+// TODO 根据轮次，校验当前轮次总的人数，不能超过指定人数
+function onSetTaskMember(round, times, index) {
+    console.log(`onSetTaskMember round:${round}, times:${times}, index:${index}`)
+    let id = getPlayerCellTaskMemberIconId(round, times, index)
+    let icon = document.getElementById(id)
+    if(icon.style.visibility == "visible") {
+        icon.style.visibility = "hidden"
+    } else {
+        icon.style.visibility = "visible"
+    }
+}
