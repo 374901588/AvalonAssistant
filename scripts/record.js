@@ -25,8 +25,8 @@ var roundTxtMap = {
 };
 
 // TODO
-//  1. 设置初始队长（需要强制指定），以及自动设置首任湖仙的逻辑
-//  2. 开始新游戏的按钮
+//  1. 如果有湖中仙女，在指定局数结束的时候，提醒玩家验人
+//  2. 重新开始新游戏的按钮
 //  3. 校验上车人数
 
 var playerNum = 6
@@ -62,7 +62,6 @@ createNextCarElements(curRound, curTimesOfRound, true, playerNum)
 
 showFirstCaptainFloatMenu(playerNum)
 
-// TODO 开启下一局/轮，文案可以设置为第 X 局第 X 轮
 function onNextCar(isLastLost) {
     if (isLastLost) {
         curTimesOfRound++
@@ -73,6 +72,8 @@ function onNextCar(isLastLost) {
     }
 
     createNextCarElements(curRound, curTimesOfRound, !isLastLost, playerNum)
+
+    // TODO 设置下一轮车队长 icon
 }
 
 /**
@@ -148,6 +149,7 @@ function getPlayerCell(round, timesOfRound, index) {
     let td = document.createElement("td")
     td.className = "record_table_theadth"
 
+    // 是否赞成当前任务的标记
     let supportIcon = document.createElement("img")
     supportIcon.id = getPlayerCellSupportIconId(round, timesOfRound, index)
     supportIcon.className = "player_support_icon_icon"
@@ -163,14 +165,23 @@ function getPlayerCell(round, timesOfRound, index) {
         }
     }
 
+    // 是否是任务成员的标记
     let taskMemberIcon = document.createElement("img")
-    taskMemberIcon.id = getPlayerCellTaskMemberIconId(round, timesOfRound, index)
+    taskMemberIcon.id = getTaskMemberTagIconId(round, timesOfRound, index)
     taskMemberIcon.className = "player_task_member_icon"
     taskMemberIcon.src = "images/icon_task_member.svg"
     taskMemberIcon.style.visibility = "hidden"
 
+    // TODO 是否是车队长的标记
+    let captainIocn = document.createElement("img")
+    captainIocn.id = getCaptainTagIconId(round, timesOfRound, index)
+    captainIocn.className = "captain_tag_icon"
+    captainIocn.src = "images/icon_captain.svg"
+    captainIocn.style.visibility = "hidden"
+
     td.appendChild(supportIcon)
     td.appendChild(taskMemberIcon)
+    td.appendChild(captainIocn)
 
     return td
 }
@@ -179,8 +190,12 @@ function getPlayerCellSupportIconId(round, timesOfRound, index) {
     return `support_${round}_${timesOfRound}_${index}`
 }
 
-function getPlayerCellTaskMemberIconId(round, timesOfRound, index) {
+function getTaskMemberTagIconId(round, timesOfRound, index) {
     return `member_${round}_${timesOfRound}_${index}`
+}
+
+function getCaptainTagIconId(round, timesOfRound, index) {
+    return `captain_${round}_${timesOfRound}_${index}`
 }
 
 function getCarRecordCell() {
@@ -256,7 +271,7 @@ function onResultOptBtnClick(resultStr, td, round, times, isLost) {
 // TODO 根据轮次，校验当前轮次总的人数，不能超过指定人数
 function onSetTaskMember(round, times, index) {
     console.log(`onSetTaskMember round:${round}, times:${times}, index:${index}`)
-    let id = getPlayerCellTaskMemberIconId(round, times, index)
+    let id = getTaskMemberTagIconId(round, times, index)
     let icon = document.getElementById(id)
     if (icon.style.visibility == "visible") {
         icon.style.visibility = "hidden"
@@ -272,8 +287,6 @@ function showFirstCaptainFloatMenu(playerNum) {
     box.style.display = 'flex';
     hidden.style.display = 'block';
 
-
-    // TODO
     let select = document.getElementById("first_captain_select");
     // 先移除所有子元素
     select.innerHTML = ""
@@ -291,9 +304,18 @@ function showFirstCaptainFloatMenu(playerNum) {
 
     let btn = document.getElementById("first_captain_confirm")
     btn.onclick = function() {
-        // TODO 确定首任队长
-        alert("测试")
+        let selectedPlayer = select.options[select.selectedIndex].value
+        console.log("首任队长: 玩家" + selectedPlayer)
+        initFirstCaptain(selectedPlayer)
+        hideFirstCaptainFloatMenu()
     }
+}
+
+function initFirstCaptain(index) {
+    // TODO 设置第一个队长图标，以及首任湖中仙女
+    let id = getCaptainTagIconId(1, 1, index);
+    let icon = document.getElementById(id);
+    icon.style.visibility = "visible"
 }
 
 function hideFirstCaptainFloatMenu() {

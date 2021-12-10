@@ -87,6 +87,12 @@
     margin: auto;
 }
 
+.captain_tag_icon {
+    width: 15px;
+    height: 15px;
+    margin: auto;
+}
+
 #first_captain_float_menu {
     display: flex;
     justify-content: center;
